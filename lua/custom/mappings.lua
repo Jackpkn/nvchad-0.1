@@ -32,6 +32,28 @@ M.general = {
       end,
       "toggle breakpoint",
     },
+
+    -- Terminal mappings
+    ["<A-i>"] = { -- Alt + i
+      function()
+        require("nvchad.term").toggle({ pos = "float" })
+      end,
+      "Toggle floating term",
+    },
+
+    ["<A-h>"] = { -- Alt + h
+      function()
+        require("nvchad.term").toggle({ pos = "horizontal" })
+      end,
+      "Toggle horizontal term",
+    },
+
+    ["<A-v>"] = { -- Alt + v
+      function()
+        require("nvchad.term").toggle({ pos = "vertical" })
+      end,
+      "Toggle vertical term",
+    },
   },
 
   i = {
@@ -41,6 +63,33 @@ M.general = {
 
   v = {
     ["<leader>y"] = { '"+y', "yank to system clipboard" },
+  },
+
+  t = {
+    -- Terminal mode mappings (when in terminal)
+    ["<A-i>"] = { -- Alt + i
+      function()
+        require("nvchad.term").toggle({ pos = "float" })
+      end,
+      "Toggle floating term",
+    },
+
+    ["<A-h>"] = { -- Alt + h
+      function()
+        require("nvchad.term").toggle({ pos = "horizontal" })
+      end,
+      "Toggle horizontal term",
+    },
+
+    ["<A-v>"] = { -- Alt + v
+      function()
+        require("nvchad.term").toggle({ pos = "vertical" })
+      end,
+      "Toggle vertical term",
+    },
+
+    -- Easy escape from terminal
+    ["<C-x>"] = { vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true), "Escape terminal mode" },
   },
 }
 
