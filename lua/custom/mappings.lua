@@ -54,6 +54,16 @@ M.general = {
       end,
       "Toggle vertical term",
     },
+
+    -- Toggle auto-save
+    ["<leader>ta"] = {
+      function()
+        require("auto-save").toggle()
+        local status = require("auto-save").state.enabled and "enabled" or "disabled"
+        vim.notify("AutoSave: " .. status, vim.log.levels.INFO)
+      end,
+      "Toggle auto-save",
+    },
   },
 
   i = {
