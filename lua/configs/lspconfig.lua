@@ -1,8 +1,10 @@
 local configs = require "nvchad.configs.lspconfig"
 
 local on_attach = configs.on_attach
-local on_init = configs.on_init
-local capabilities = configs.capabilities
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+-- Enable snippet support
+capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 local lspconfig = require "lspconfig"
 
@@ -31,7 +33,7 @@ local enhanced_capabilities = vim.tbl_deep_extend("force", capabilities, {
 for _, lsp in ipairs(servers) do
   local config = {
     on_attach = on_attach,
-    capabilities = enhanced_capabilities,
+    capabilities = capabilities,
     settings = {
       -- HTML specific settings
       html = {

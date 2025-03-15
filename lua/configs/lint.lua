@@ -21,10 +21,9 @@ vim.api.nvim_create_autocmd({
 -- Add event for insert mode changes (real-time)
 vim.api.nvim_create_autocmd({ "InsertChange", "TextChangedI" }, {
   callback = function()
-    -- Add a small delay to prevent performance issues
     vim.defer_fn(function()
       require("lint").try_lint()
-    end, 100)  -- 100ms delay
+    end, 200)  -- Increase delay to 200ms
   end,
 })
 
