@@ -48,4 +48,4 @@ M.lazy_nvim = {
   },
 }
 
-return M 
+return M
