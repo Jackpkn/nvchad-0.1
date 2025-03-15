@@ -5,7 +5,7 @@ M.general = {
     [";"] = { ":", "enter command mode", opts = { nowait = true } },
     ["<leader>w"] = { "<cmd>w<CR>", "save file" },
     ["\\"] = { "<cmd>:vsplit<CR>", "vertical split" },
-    
+
     -- Tmux navigation
     ["<C-h>"] = { "<cmd>TmuxNavigateLeft<cr>", "window left" },
     ["<C-l>"] = { "<cmd>TmuxNavigateRight<cr>", "window right" },
@@ -16,15 +16,15 @@ M.general = {
     ["<leader>qx"] = { "<cmd>TroubleToggle<CR>", "toggle trouble" },
     ["<leader>qw"] = { "<cmd>TroubleToggle workspace_diagnostics<CR>", "workspace diagnostics" },
     ["<leader>qd"] = { "<cmd>TroubleToggle document_diagnostics<CR>", "document diagnostics" },
-    
+
     -- Tests
-    ["<leader>tt"] = { 
-      function() 
+    ["<leader>tt"] = {
+      function()
         require("neotest").run.run()
-      end, 
-      "run nearest test" 
+      end,
+      "run nearest test"
     },
-    
+
     -- Debug
     ["<leader>db"] = {
       function()
@@ -103,4 +103,4 @@ M.general = {
   },
 }
 
-return M 
+return M

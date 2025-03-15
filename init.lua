@@ -13,12 +13,12 @@ vim.opt.rtp:prepend(lazypath)
 
 local lazy_config = require "configs.lazy"
 -- font setup
--- vim.cmd [[
---   highlight Comment cterm=italic gui=italic
---   highlight Keyword cterm=italic gui=italic
---   highlight Function cterm=italic gui=italic
---   highlight Type cterm=italic gui=italic
--- ]]
+ vim.cmd [[
+   highlight Comment cterm=italic gui=italic
+   highlight Keyword cterm=italic gui=italic
+   highlight Function cterm=italic gui=italic
+   highlight Type cterm=italic gui=italic
+ ]]
 
 -- load plugins
 require("lazy").setup({
