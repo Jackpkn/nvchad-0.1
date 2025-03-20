@@ -64,6 +64,8 @@ M.general = {
       end,
       "Toggle auto-save",
     },
+
+    ["<leader>h"] = { "<cmd>lua vim.lsp.buf.hover()<CR>", "Show hover documentation" },
   },
 
   i = {

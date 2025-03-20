@@ -26,11 +26,12 @@
 
 
 return {
+  -- Formatting with conform.nvim (prettier)
   {
     "stevearc/conform.nvim",
-    event = "BufWritePre",
+    event = "BufWritePre", -- Trigger formatting before saving
     config = function()
-      require "configs.conform"
+      require("conform").setup(require("configs.conform")) -- Load conform config
     end,
   },
   {
@@ -49,6 +50,7 @@ return {
     lazy = false,
     opts = {},
   },
+  -- LSP Configuration (eslint_d + prettier - formatting removed from here)
   {
     "neovim/nvim-lspconfig",
     config = function()
@@ -65,7 +67,7 @@ return {
         "stylua",
         "html-lsp",
         "css-lsp",
-        "prettier",
+        "prettier", -- Ensure prettier is installed via mason
         "eslint-lsp",
         "gopls",
         "js-debug-adapter",
@@ -95,7 +97,76 @@ return {
     "mfussenegger/nvim-lint",
     event = "VeryLazy",
     config = function()
-      require "configs.lint"
+      local lint = require("lint")
+
+      -- Define linters for specific file types
+      lint.linters_by_ft = {
+        javascript = { "eslint_d" },
+        typescript = { "eslint_d" },
+        javascriptreact = { "eslint_d" },
+        typescriptreact = { "eslint_d" },
+      }
+
+      -- Override eslint_d arguments to suppress missing config warnings
+      lint.linters.eslint_d.args = {
+        "--no-warn-ignored", -- Suppress warnings about missing ESLint config
+        "--format",
+        "json",
+        "--stdin",
+        "--stdin-filename",
+        function()
+          return vim.api.nvim_buf_get_name(0)
+        end,
+      }
+
+      -- Optional: Filter out specific errors (e.g., "No ESLint configuration found")
+      lint.linters.eslint_d = require("lint.util").wrap(lint.linters.eslint_d, function(diagnostic)
+        if diagnostic.message:find("Error: Could not find config file") then
+          return nil -- Ignore this specific error
+        end
+        return diagnostic
+      end)
+
+      -- Automatically change working directory to the nearest node_modules folder
+      local function find_nearest_node_modules_dir()
+        local current_dir = vim.fn.expand("%:p:h") -- Get the directory of the current file
+        while current_dir ~= "/" do
+          if vim.fn.isdirectory(current_dir .. "/node_modules") == 1 then
+            return current_dir
+          end
+          current_dir = vim.fn.fnamemodify(current_dir, ":h") -- Move up one directory
+        end
+        return nil
+      end
+
+      -- Set up autocommands to run the linter
+      local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
+      vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+        group = lint_augroup,
+        callback = function()
+          local ft = vim.bo.filetype
+          local js_types = { "javascript", "typescript", "javascriptreact", "typescriptreact" }
+
+          -- Only run eslint_d for JavaScript/TypeScript files
+          if not vim.tbl_contains(js_types, ft) then
+            lint.try_lint()
+            return
+          end
+
+          -- Change to the nearest node_modules directory (if found)
+          local original_cwd = vim.fn.getcwd()
+          local node_modules_dir = find_nearest_node_modules_dir()
+          if node_modules_dir then
+            vim.cmd("cd " .. node_modules_dir)
+          end
+
+          -- Run the linter
+          lint.try_lint()
+
+          -- Restore the original working directory
+          vim.cmd("cd " .. original_cwd)
+        end,
+      })
     end,
   },
   {

@@ -1,3 +1,5 @@
+local conform = require("conform")
+
 local options = {
   formatters_by_ft = {
     lua = { "stylua" },
@@ -5,33 +7,32 @@ local options = {
     html = { "prettier" },
     javascript = { "prettier" },
     typescript = { "prettier" },
-    typescriptreact = { "prettier" },
     javascriptreact = { "prettier" },
+    typescriptreact = { "prettier" },
+    json = { "prettier" },
+    svelte = { "prettier" },
+    vue = { "prettier" },
+    yaml = { "prettier" },
+    markdown = { "prettier" },
   },
 
-  -- Enable format-on-save
+  -- Format on save configuration
   format_on_save = {
-    timeout_ms = 500,
     lsp_fallback = true,
-    async = false,  -- This ensures formatting is done before saving
+    timeout_ms = 500,
   },
 
-  -- Customize formatters
+  -- Custom formatters configuration
   formatters = {
     prettier = {
-      -- Make prettier use local config files
-      prepend_args = { 
-        "--config-precedence", "prefer-file",
-        "--html-whitespace-sensitivity", "strict",
-        "--parser", function(parser)
-          if vim.bo.filetype == "html" then
-            return "html"
-          elseif vim.bo.filetype == "css" then
-            return "css"
-          end
-          return parser
-        end
+      command = "prettier",
+      args = {
+        "--config-precedence",
+        "prefer-file",
+        "--stdin-filepath",
+        vim.api.nvim_buf_get_name(0),
       },
+      stdin = true,
     },
   },
 }
